@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "156325741397",
+    "project_id": "mirage-5973f",
+    "storage_bucket": "mirage-5973f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:156325741397:android:c8bd42fbad060bfe58a5dc",
+        "android_client_info": {
+          "package_name": "com.ethix.mirage"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "156325741397-l4ld9fqgrrp38autj5rd0okme8j8blm6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBn6WTN7WybYYmFwEa2jIv3zXAOarNkgRw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "156325741397-l4ld9fqgrrp38autj5rd0okme8j8blm6.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
