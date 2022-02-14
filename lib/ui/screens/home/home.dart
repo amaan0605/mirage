@@ -23,7 +23,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   //Variables
   List<WallpaperModel> wallpaper = [];
-  List<WallHavenModal> pexelWallpaper = [];
+  dynamic pexelWallpaper = [];
   int pageNumber = 1;
   DateTime timeBackPress = DateTime.now();
   ScrollController scrollController = ScrollController();
@@ -48,32 +48,27 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   // }
 
   //Load More Wallpaper from API
-  loadMoreWallpaper() async {
-    var response = await http.get(
-        Uri.parse(
-            'https://api.pexels.com/v1/curated?page=$pageNumber&per_page=20'),
-        headers: {'Authorization': apiKey});
-    Map<String, dynamic> jsonData = jsonDecode(response.body);
-    jsonData['photos'].forEach((element) {
-      WallpaperModel wallpaperModal = WallpaperModel();
-      wallpaperModal = WallpaperModel.fromMap(element);
-      wallpaper.add(wallpaperModal);
-    });
-    setState(() {});
-  }
+  // loadMoreWallpaper() async {
+  //   var response = await http.get(
+  //       Uri.parse(
+  //           'https://api.pexels.com/v1/curated?page=$pageNumber&per_page=20'),
+  //       headers: {'Authorization': apiKey});
+  //   Map<String, dynamic> jsonData = jsonDecode(response.body);
+  //   jsonData['photos'].forEach((element) {
+  //     WallpaperModel wallpaperModal = WallpaperModel();
+  //     wallpaperModal = WallpaperModel.fromMap(element);
+  //     wallpaper.add(wallpaperModal);
+  //   });
+  //   setState(() {});
+  // }
 
-  unsplashWallpaper() async {
-    var response = await http.get(
-      Uri.parse(
-          'https://api.unsplash.com/photos/?client_id=erAT3ilt4B-hXs7EgwefwiHDe9diAT3u9lrBSWtnywY'),
-    );
-    print(response);
-    if (response == null) {
-      print('response is null\n\n\n\n');
-    } else {
-      Map<String, dynamic> wallData = jsonDecode(response.body);
+  void unsplashWallpaper() async {
+    var response = await http.get(Uri.parse(
+        'https://api.unsplash.com/search/photos/?client_id=erAT3ilt4B-hXs7EgwefwiHDe9diAT3u9lrBSWtnywY&query=animal'));
+    setState(() {
+      var wallData = jsonDecode(response.body);
       print(wallData);
-    }
+    });
   }
 
   //OnWIllPop Function
@@ -98,7 +93,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   void initState() {
     unsplashWallpaper();
     wallpaperGrid();
-    loadMoreWallpaper();
+    // loadMoreWallpaper();
     super.initState();
   }
 
@@ -168,7 +163,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                             MaterialStateProperty.all<Color>(Colors.grey[700])),
                     onPressed: () {
                       pageNumber++;
-                      loadMoreWallpaper();
+                      // loadMoreWallpaper();
                     },
                     child: Text(
                       '     Load More...      ',

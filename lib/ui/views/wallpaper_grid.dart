@@ -37,6 +37,7 @@ StreamBuilder<QuerySnapshot> wallpaperGrid(
             );
           default:
             return GridView.builder(
+              key: UniqueKey(),
               padding: EdgeInsets.symmetric(horizontal: 16),
               physics: ClampingScrollPhysics(),
               shrinkWrap: true,
@@ -86,6 +87,7 @@ StreamBuilder<QuerySnapshot> wallpaperGrid(
 //Wallpaper Grid
 Widget pexelwallpaperGrid({List<WallpaperModel> wallpaper, context}) {
   return GridView.count(
+    key: UniqueKey(),
     padding: EdgeInsets.symmetric(horizontal: 16),
     shrinkWrap: true,
     physics: ClampingScrollPhysics(),
