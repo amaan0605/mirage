@@ -4,9 +4,7 @@ import 'package:getwidget/components/loader/gf_loader.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
-import 'package:wallpaperhub/ui/views/theme_mode.dart';
 import 'package:wallpaperhub/ui/widgets/viewPageButtonData.dart';
-import 'package:wallpaperhub/ui/widgets/widget.dart';
 
 class ImageView extends StatefulWidget {
   final String imgUrl;

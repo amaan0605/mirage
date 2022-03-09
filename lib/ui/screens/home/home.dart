@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:getwidget/components/toast/gf_toast.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:wallpaperhub/api/WallHaven/wallHaven_data.dart';
+import 'package:wallpaperhub/api/Unsplash/unSplash_data.dart';
 import 'package:wallpaperhub/data/category_data.dart';
 import 'package:wallpaperhub/model/wallpaper_model.dart';
 import 'package:wallpaperhub/ui/screens/home/carousel_slider.dart';
@@ -12,7 +12,6 @@ import 'package:wallpaperhub/ui/views/wallpaper_grid.dart';
 import 'package:wallpaperhub/ui/widgets/widget.dart';
 import 'package:http/http.dart' as http;
 import 'package:sizer/sizer.dart';
-import 'package:wallpaperhub/api/WallHaven/wallhaven_modal.dart';
 
 //HomeScreen Class
 class HomeScreen extends StatefulWidget {
@@ -27,32 +26,44 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   int pageNumber = 1;
   DateTime timeBackPress = DateTime.now();
   ScrollController scrollController = ScrollController();
-  // //API DATA
-  // getTrendingWallpaper() async {
+  //API DATA
+  getTrendingWallpaper() async {
+    var response = await http.get(
+        Uri.parse('https://api.pexels.com/v1/curated?per_page=20'),
+        headers: {
+          'Authorization': apiKey,
+        });
+    Map<String, dynamic> jsonData = jsonDecode(response.body);
+    jsonData["photos"].forEach((element) {
+      WallpaperModel wallpaperModel = WallpaperModel();
+      wallpaperModel = WallpaperModel.fromMap(element);
+      wallpaper.add(wallpaperModel);
+    });
+    if (this.mounted) {
+      setState(() {});
+    }
+  }
+
+  var urlData;
+  unsplashWallpapers() async {
+    var response = await http.get(
+      Uri.parse(unsplashUrl),
+    );
+    setState(() {
+      urlData = json.decode(response.body);
+    });
+  }
+
+  // Load More Wallpaper from API
+  // loadMoreWallpaper() async {
   //   var response = await http.get(
-  //       Uri.parse('https://api.pexels.com/v1/curated?per_page=80'),
+  //       Uri.parse(
+  //           'https://api.pexels.com/v1/curated?page=$pageNumber&per_page=20'),
   //       headers: {
   //         'Authorization': apiKey,
   //         'Content-Type': 'application/json',
   //         'Charset': 'utf-8'
   //       });
-  //   Map<String, dynamic> jsonData = jsonDecode(response.body);
-  //   jsonData["photos"].forEach((element) {
-  //     WallpaperModel wallpaperModel = WallpaperModel();
-  //     wallpaperModel = WallpaperModel.fromMap(element);
-  //     wallpaper.add(wallpaperModel);
-  //   });
-  //   if (this.mounted) {
-  //     setState(() {});
-  //   }
-  // }
-
-  //Load More Wallpaper from API
-  // loadMoreWallpaper() async {
-  //   var response = await http.get(
-  //       Uri.parse(
-  //           'https://api.pexels.com/v1/curated?page=$pageNumber&per_page=20'),
-  //       headers: {'Authorization': apiKey});
   //   Map<String, dynamic> jsonData = jsonDecode(response.body);
   //   jsonData['photos'].forEach((element) {
   //     WallpaperModel wallpaperModal = WallpaperModel();
@@ -61,15 +72,6 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   //   });
   //   setState(() {});
   // }
-
-  void unsplashWallpaper() async {
-    var response = await http.get(Uri.parse(
-        'https://api.unsplash.com/search/photos/?client_id=erAT3ilt4B-hXs7EgwefwiHDe9diAT3u9lrBSWtnywY&query=animal'));
-    setState(() {
-      var wallData = jsonDecode(response.body);
-      print(wallData);
-    });
-  }
 
   //OnWIllPop Function
   Future<bool> onWillPop() async {
@@ -91,8 +93,9 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   //INIT STATE FUNCTION
   @override
   void initState() {
-    unsplashWallpaper();
-    wallpaperGrid();
+    unsplashWallpapers();
+    // wallpaperGrid();
+    getTrendingWallpaper();
     // loadMoreWallpaper();
     super.initState();
   }
@@ -129,54 +132,62 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       ),
 
       //BODY
-      body: WillPopScope(
-        onWillPop: onWillPop,
-        child: SafeArea(
-          child: SingleChildScrollView(
-            controller: scrollController,
-            child: Container(
-              child: Column(
-                children: [
-                  Container(
-                    padding: EdgeInsets.symmetric(horizontal: 15),
-                    height: 25.h,
-                    child: carouselSlider(),
-                  ),
-                  //Main Heading
-                  mainHeading('EXPLORE'),
-                  SizedBox(
-                    height: 3.h,
-                  ),
+      body: urlData == null
+          ? Center(
+              child: GFLoader(
+                type: GFLoaderType.circle,
+              ),
+            )
+          : WillPopScope(
+              onWillPop: onWillPop,
+              child: SafeArea(
+                child: SingleChildScrollView(
+                  controller: scrollController,
+                  child: Container(
+                    child: Column(
+                      children: [
+                        Container(
+                          padding: EdgeInsets.symmetric(horizontal: 15),
+                          height: 25.h,
+                          child: carouselSlider(),
+                        ),
+                        //Main Heading
+                        mainHeading('EXPLORE'),
+                        SizedBox(
+                          height: 3.h,
+                        ),
+                        unsplashWallpaperData(urlData, context),
 
-                  // Wallpaper Grid
-                  wallpaperGrid(
-                    wallpaper: wallpaper,
-                    context: context,
-                  ),
-                  SizedBox(height: 6.0),
-                  pexelwallpaperGrid(wallpaper: wallpaper, context: context),
+                        // Wallpaper Grid
+                        // wallpaperGrid(
+                        //   wallpaper: wallpaper,
+                        //   context: context,
+                        // ),
+                        // SizedBox(height: 6.0),
+                        pexelwallpaperGrid(
+                            wallpaper: wallpaper, context: context),
 
-                  // Load More Button
-                  ElevatedButton(
-                    style: ButtonStyle(
-                        backgroundColor:
-                            MaterialStateProperty.all<Color>(Colors.grey[700])),
-                    onPressed: () {
-                      pageNumber++;
-                      // loadMoreWallpaper();
-                    },
-                    child: Text(
-                      '     Load More...      ',
-                      style: GoogleFonts.lato(
-                          fontSize: 20, fontWeight: FontWeight.bold),
+                        // Load More Button
+                        ElevatedButton(
+                          style: ButtonStyle(
+                              backgroundColor: MaterialStateProperty.all<Color>(
+                                  Colors.grey[700])),
+                          onPressed: () {
+                            pageNumber++;
+                            // loadMoreWallpaper();
+                          },
+                          child: Text(
+                            '     Load More...      ',
+                            style: GoogleFonts.lato(
+                                fontSize: 20, fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                ],
+                ),
               ),
             ),
-          ),
-        ),
-      ),
     );
   }
 }

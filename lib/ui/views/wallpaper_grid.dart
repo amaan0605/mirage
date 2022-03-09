@@ -37,7 +37,6 @@ StreamBuilder<QuerySnapshot> wallpaperGrid(
             );
           default:
             return GridView.builder(
-              key: UniqueKey(),
               padding: EdgeInsets.symmetric(horizontal: 16),
               physics: ClampingScrollPhysics(),
               shrinkWrap: true,
@@ -87,7 +86,6 @@ StreamBuilder<QuerySnapshot> wallpaperGrid(
 //Wallpaper Grid
 Widget pexelwallpaperGrid({List<WallpaperModel> wallpaper, context}) {
   return GridView.count(
-    key: UniqueKey(),
     padding: EdgeInsets.symmetric(horizontal: 16),
     shrinkWrap: true,
     physics: ClampingScrollPhysics(),
@@ -127,5 +125,39 @@ Widget pexelwallpaperGrid({List<WallpaperModel> wallpaper, context}) {
         ),
       );
     }).toList(),
+  );
+}
+
+//UNSPLASH API
+Widget unsplashWallpaperData(var urlData, BuildContext context) {
+  return GridView.builder(
+    padding: EdgeInsets.symmetric(horizontal: 16),
+    shrinkWrap: true,
+    physics: ClampingScrollPhysics(),
+    itemCount: 20,
+    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        childAspectRatio: 9 / 16,
+        crossAxisCount: 2,
+        crossAxisSpacing: 6,
+        mainAxisSpacing: 6),
+    itemBuilder: (context, i) => ClipRRect(
+      borderRadius: BorderRadius.circular(16),
+      child: GestureDetector(
+        onTap: () {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) =>
+                    ImageView(imgUrl: urlData[i]['urls']['raw']),
+              ));
+        },
+        child: Container(
+          child: CachedNetworkImage(
+            imageUrl: urlData[i]['urls']['regular'],
+            fit: BoxFit.cover,
+          ),
+        ),
+      ),
+    ),
   );
 }
