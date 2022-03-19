@@ -72,3 +72,36 @@ Widget pageButtonStyle({String text}) {
         GoogleFonts.lato(color: kSecondaryColor, fontWeight: FontWeight.bold),
   );
 }
+
+//COMING SOON
+Widget comingSoonContainer() {
+  return Padding(
+    padding: const EdgeInsets.only(bottom: 8.0, left: 22, right: 22),
+    child: Stack(
+      alignment: Alignment.center,
+      children: [
+        ClipRRect(
+          borderRadius: BorderRadius.circular(15),
+          child: Container(
+            height: 100,
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                fit: BoxFit.cover,
+                image: AssetImage('images/mirage3.jpg'),
+              ),
+            ),
+          ),
+        ),
+        Center(
+          child: Text(
+            'COMING SOON...',
+            style: TextStyle(
+                fontSize: 20.0,
+                color: Colors.white,
+                fontWeight: FontWeight.bold),
+          ),
+        ),
+      ],
+    ),
+  );
+}

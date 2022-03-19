@@ -1,11 +1,10 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:sizer/sizer.dart';
-import 'package:wallpaperhub/ui/screens/home/home.dart';
 import 'package:wallpaperhub/ui/screens/splashScreen/splash_screen.dart';
 import 'package:wallpaperhub/ui/views/theme_mode.dart';
+
 import 'package:wallpaperhub/ui/widgets/navigation_bar.dart';
 
 Future<void> main() async {

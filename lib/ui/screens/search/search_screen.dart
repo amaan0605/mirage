@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:wallpaperhub/model/wallpaper_model.dart';
+import 'package:wallpaperhub/api/Pixels/wallpaper_model.dart';
 import 'package:wallpaperhub/ui/screens/search/after_search.dart';
 import 'package:wallpaperhub/ui/views/theme_mode.dart';
 import 'package:wallpaperhub/ui/widgets/widget.dart';
@@ -24,7 +24,7 @@ class _SearchScreenState extends State<SearchScreen> {
       body: Column(
         children: [
           Padding(
-            padding: EdgeInsets.only(top: 2.h),
+            padding: EdgeInsets.only(top: 4.h),
             child: Container(
               decoration: BoxDecoration(
                 color: kMainColor,
@@ -48,7 +48,7 @@ class _SearchScreenState extends State<SearchScreen> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => Search(
+                          builder: (context) => AfterSearchScreen(
                             searchQuery: searchController.text,
                           ),
                         ),

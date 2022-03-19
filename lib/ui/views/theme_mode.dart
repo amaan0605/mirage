@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:wallpaperhub/ui/widgets/widget.dart';
 
 CustomTheme currentTheme = CustomTheme();
 

@@ -1,8 +1,8 @@
 import 'package:sizer/sizer.dart';
 import 'package:flutter/material.dart';
-import 'package:wallpaperhub/data/category_data.dart';
-import 'package:wallpaperhub/model/categories_model.dart';
-import 'package:wallpaperhub/model/wallpaper_model.dart';
+import 'package:wallpaperhub/ui/screens/categories/category_data.dart';
+import 'package:wallpaperhub/ui/screens/categories/categories_model.dart';
+import 'package:wallpaperhub/api/Pixels/wallpaper_model.dart';
 import 'package:wallpaperhub/ui/widgets/widget.dart';
 
 class Categories extends StatefulWidget {

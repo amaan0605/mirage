@@ -37,6 +37,16 @@ class _ImageViewState extends State<ImageView> {
                 ),
               ),
             ),
+            Padding(
+              padding: EdgeInsets.fromLTRB(0, 0, 38.h, 85.h),
+              child: GestureDetector(
+                onTap: () => Navigator.pop(context),
+                child: Icon(
+                  Icons.arrow_back_ios_new_rounded,
+                  color: Colors.white70,
+                ),
+              ),
+            ),
             ViewPageButtonData(
               imgURL: widget.imgUrl,
             ),

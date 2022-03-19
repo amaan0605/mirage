@@ -1,22 +1,44 @@
+import 'dart:ui';
+
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:getwidget/components/alert/gf_alert.dart';
+import 'package:getwidget/components/toast/gf_toast.dart';
+import 'package:sizer/sizer.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:wallpaperhub/ui/widgets/widget.dart';
+
+/* welcome to Mirage
+new wallpaper(new page)
+what's in your mind(search page)
+rate us(play store)
+help us to improve(google form)*/
+
+//<a href="https://www.vecteezy.com/free-vector/mirage">Mirage Vectors by Vecteezy</a>
 
 //Carousel Slider
 Widget carouselSlider() {
   return CarouselSlider(
     items: [
       SliderData(
-          url:
-              'https://img.freepik.com/free-vector/colorful-palm-silhouettes-background_23-2148541792.jpg?size=626&ext=jpg'),
+          size: 20.sp,
+          onTap: () {},
+          title: 'Welcome to \nMIRAGE',
+          source: 'images/mirage2.jpg'),
       SliderData(
-          url:
-              'https://images.unsplash.com/photo-1528819027803-5473f2bf7633?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxleHBsb3JlLWZlZWR8MXx8fGVufDB8fHx8&w=1000&q=80'),
+          onTap: () {},
+          title: 'New Wallpapers\nEveryday',
+          source: 'images/mirage.jpg'),
       SliderData(
-          url:
-              'https://images.pexels.com/photos/1274260/pexels-photo-1274260.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500'),
+          onTap: () {},
+          title: 'Rate us on\nPlaystore',
+          source: 'images/mirage4.jpg'),
       SliderData(
-          url:
-              'https://www.wallpapertip.com/wmimgs/79-796913_galaxy-wallpaper-hd-phone.jpg'),
+          onTap: () {
+            _luanchUrl();
+          },
+          title: 'Help us to improve\nMIRAGE',
+          source: 'images/mirage3.jpg'),
     ],
     //Slider Container properties
 
@@ -27,7 +49,7 @@ Widget carouselSlider() {
       aspectRatio: 16 / 9,
       autoPlayCurve: Curves.easeInCubic,
       enableInfiniteScroll: true,
-      autoPlayAnimationDuration: Duration(milliseconds: 800),
+      autoPlayAnimationDuration: Duration(milliseconds: 500),
       viewportFraction: 0.8,
     ),
   );
@@ -35,28 +57,68 @@ Widget carouselSlider() {
 
 //Carousel SLider Data
 class SliderData extends StatelessWidget {
-  final String url;
-  SliderData({@required this.url});
+  final String source;
+  final String title;
+  final Function onTap;
+  final double size;
+  SliderData(
+      {@required this.source,
+      @required this.onTap,
+      this.title,
+      this.size,
+      BuildContext context});
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {},
+      onTap: onTap,
       child: Container(
         child: Center(
-          child: Text(
-            'BETA VERSION',
-            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+          child: Stack(
+            children: [
+              Text(
+                title,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                    foreground: Paint()
+                      ..style = PaintingStyle.stroke
+                      ..strokeWidth = 1
+                      ..color = Colors.black,
+                    fontWeight: FontWeight.bold,
+                    letterSpacing: 3.0,
+                    fontSize: 13.sp),
+              ),
+              Text(
+                title,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: kMainColor,
+                  fontSize: 13.sp,
+                  fontWeight: FontWeight.bold,
+                  letterSpacing: 3.0,
+                ),
+              )
+            ],
           ),
         ),
         margin: EdgeInsets.all(6.0),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(8.0),
           image: DecorationImage(
-            image: NetworkImage(url),
+            colorFilter: ColorFilter.mode(Colors.black38, BlendMode.darken),
+            image: AssetImage(source),
             fit: BoxFit.cover,
           ),
         ),
       ),
     );
+  }
+}
+
+_luanchUrl() async {
+  const String url = 'https://forms.gle/7NYdGuGBWa66b13e6';
+  if (await canLaunch(url)) {
+    await launch(url);
+  } else {
+    throw 'Could not $url';
   }
 }

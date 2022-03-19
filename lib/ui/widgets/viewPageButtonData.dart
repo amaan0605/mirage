@@ -2,6 +2,7 @@ import 'dart:typed_data';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_share/flutter_share.dart';
 import 'package:getwidget/components/toast/gf_toast.dart';
 import 'package:getwidget/getwidget.dart';
 
@@ -26,6 +27,14 @@ class _ViewPageButtonDataState extends State<ViewPageButtonData> {
   //Varibales
   PermissionStatus status;
   var receiveData;
+  Future<void> share() async {
+    await FlutterShare.share(
+        title: 'MIRAGE WALLPAPER',
+        text:
+            'TAKE A LOOK!!! I FOUND AWESOME WALLPAPER ON MIRAGE: WALLPAPER APP',
+        linkUrl: widget.imgURL,
+        chooserTitle: 'Share Wallpaper to...');
+  }
 
   _save() async {
     await _askPermission();
@@ -94,11 +103,11 @@ class _ViewPageButtonDataState extends State<ViewPageButtonData> {
                 currentTheme.isLightMode ? kMainColor : Colors.grey[850],
             child: ViewPageButtons(
               icon: Icon(
-                Icons.close,
+                Icons.share_outlined,
                 color: currentTheme.isLightMode ? kSecondaryColor : kMainColor,
               ),
               onpressed: () {
-                Navigator.pop(context);
+                share();
               },
             ),
           ),

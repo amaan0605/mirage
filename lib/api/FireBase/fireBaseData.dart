@@ -2,7 +2,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:getwidget/getwidget.dart';
-import 'package:wallpaperhub/api/Pixels/wallpaper_model.dart';
 import 'package:wallpaperhub/ui/views/image_view.dart';
 
 getID(var link) {
@@ -20,15 +19,22 @@ getID(var link) {
   return wallID;
 }
 
-StreamBuilder<QuerySnapshot> wallpaperGrid(
-    {List<WallpaperModel> wallpaper, BuildContext context}) {
+StreamBuilder<QuerySnapshot> fireBaseWallpaperGrid(
+    {List wallpaper, BuildContext context, String query}) {
   return StreamBuilder<QuerySnapshot>(
-      stream: FirebaseFirestore.instance.collection('Humour').snapshots(),
+      stream: FirebaseFirestore.instance.collection(query).snapshots(),
       builder: (context, snapshot) {
         if (snapshot.hasError)
           return Center(child: Text('Failed to load Wallpapers...'));
 
         switch (snapshot.connectionState) {
+          case ConnectionState.none:
+            return Center(
+              child: GFLoader(
+                type: GFLoaderType.circle,
+              ),
+            );
+
           case ConnectionState.waiting:
             return Center(
               child: GFLoader(
@@ -81,83 +87,4 @@ StreamBuilder<QuerySnapshot> wallpaperGrid(
             );
         }
       });
-}
-
-//Wallpaper Grid
-Widget pexelwallpaperGrid({List<WallpaperModel> wallpaper, context}) {
-  return GridView.count(
-    padding: EdgeInsets.symmetric(horizontal: 16),
-    shrinkWrap: true,
-    physics: ClampingScrollPhysics(),
-    crossAxisCount: 2,
-    mainAxisSpacing: 6.0,
-    crossAxisSpacing: 6.0,
-    childAspectRatio: 0.6,
-    children: wallpaper.map((wallpaper) {
-      return GestureDetector(
-        onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => ImageView(
-                imgUrl: wallpaper.src.large2x,
-              ),
-            ),
-          );
-        },
-        child: Container(
-          child: GridTile(
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(16),
-              child: Container(
-                child: CachedNetworkImage(
-                  errorWidget: (context, url, error) => Icon(Icons.error),
-                  placeholder: (context, url) => Center(
-                      child: GFLoader(
-                    type: GFLoaderType.circle,
-                  )),
-                  imageUrl: wallpaper.src.portrait,
-                  fit: BoxFit.cover,
-                ),
-              ),
-            ),
-          ),
-        ),
-      );
-    }).toList(),
-  );
-}
-
-//UNSPLASH API
-Widget unsplashWallpaperData(var urlData, BuildContext context) {
-  return GridView.builder(
-    padding: EdgeInsets.symmetric(horizontal: 16),
-    shrinkWrap: true,
-    physics: ClampingScrollPhysics(),
-    itemCount: 20,
-    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        childAspectRatio: 9 / 16,
-        crossAxisCount: 2,
-        crossAxisSpacing: 6,
-        mainAxisSpacing: 6),
-    itemBuilder: (context, i) => ClipRRect(
-      borderRadius: BorderRadius.circular(16),
-      child: GestureDetector(
-        onTap: () {
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) =>
-                    ImageView(imgUrl: urlData[i]['urls']['raw']),
-              ));
-        },
-        child: Container(
-          child: CachedNetworkImage(
-            imageUrl: urlData[i]['urls']['regular'],
-            fit: BoxFit.cover,
-          ),
-        ),
-      ),
-    ),
-  );
 }

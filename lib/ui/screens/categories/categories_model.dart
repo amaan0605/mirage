@@ -1,6 +1,7 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
-import 'package:wallpaperhub/ui/screens/search/after_search.dart';
+import 'package:wallpaperhub/ui/screens/categories/categoryScreen.dart';
 
 class CategoriesModel {
   String categoriesName;
@@ -23,11 +24,10 @@ class _CategoriesTileState extends State<CategoriesTile> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            maintainState: true,
-            builder: (context) => Search(
-              searchQuery: widget.title,
-            ),
-          ),
+              maintainState: true,
+              builder: (context) => CategoryScreen(
+                    query: widget.title,
+                  )),
         );
       },
       child: Container(
@@ -36,8 +36,8 @@ class _CategoriesTileState extends State<CategoriesTile> {
           children: [
             ClipRRect(
               borderRadius: BorderRadius.circular(10),
-              child: Image.network(
-                widget.imgUrl,
+              child: CachedNetworkImage(
+                imageUrl: widget.imgUrl,
                 height: 20.h,
                 width: double.infinity,
                 fit: BoxFit.cover,
