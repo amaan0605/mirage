@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:wallpaperhub/ui/views/image_view.dart';
+import 'package:wallpaperhub/ui/widgets/widget.dart';
 
 getID(var link) {
   var wallID = 'https://drive.google.com/uc?export=download&id=';
@@ -62,12 +63,7 @@ StreamBuilder<QuerySnapshot> fireBaseWallpaperGrid(
                     borderRadius: BorderRadius.circular(10),
                     child: Container(
                       child: CachedNetworkImage(
-                        errorWidget: (context, url, error) => Row(
-                          children: [
-                            Icon(Icons.error_outline_outlined),
-                            Text('Failder to Load Wallpaper...')
-                          ],
-                        ),
+                        errorWidget: (context, url, error) => failedToLoad(),
                         placeholder: (context, url) => GFLoader(
                           type: GFLoaderType.circle,
                         ),

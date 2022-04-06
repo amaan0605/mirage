@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:getwidget/components/loader/gf_loader.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:wallpaperhub/ui/views/image_view.dart';
+import 'package:wallpaperhub/ui/widgets/widget.dart';
 
 const wallHavenApiKey = 'P1IzsYnxxvAqk8Zq0jGn5TbWYOvun4It';
 String wallHavenURL =
@@ -33,7 +34,7 @@ Widget wallHavenWallpaperGrid({var wallHavenData}) {
         borderRadius: BorderRadius.circular(16.0),
         child: Container(
           child: CachedNetworkImage(
-            errorWidget: (context, url, error) => Icon(Icons.error),
+            errorWidget: (context, url, error) => failedToLoad(),
             placeholder: (context, url) => GFLoader(
               type: GFLoaderType.circle,
             ),

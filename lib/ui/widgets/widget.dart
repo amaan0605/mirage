@@ -1,8 +1,10 @@
+import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:sizer/sizer.dart';
+import 'package:wallpaperhub/ui/views/theme_mode.dart';
 
 //CONSTANTS
 const Color kMainColor = Color(0xFFf5a285);
@@ -65,11 +67,13 @@ Widget splashText({@required String text, double size, Color color}) {
 }
 
 //STYLING OF SET AS WALLPAPER BUTTON
-Widget pageButtonStyle({String text}) {
+Widget pageButtonStyle({String text, double fontSize}) {
   return Text(
     text,
-    style:
-        GoogleFonts.lato(color: kSecondaryColor, fontWeight: FontWeight.bold),
+    style: GoogleFonts.lato(
+        color: currentTheme.isLightMode ? kSecondaryColor : kMainColor,
+        fontWeight: FontWeight.bold,
+        fontSize: fontSize),
   );
 }
 
@@ -103,5 +107,62 @@ Widget comingSoonContainer() {
         ),
       ],
     ),
+  );
+}
+
+//Failed To load Image
+
+Widget failedToLoad() {
+  return Center(
+    child: Column(
+      children: [
+        Icon(Icons.error_outline_sharp),
+        Text(
+          'Failed to load Walllpaper\nRelaunch the Page',
+          style: TextStyle(fontWeight: FontWeight.bold),
+          textAlign: TextAlign.center,
+        )
+      ],
+    ),
+  );
+}
+
+showAlertDialog(BuildContext context, String screen) {
+  // set up the button
+  Widget okButton = TextButton(
+    child: Text(
+      "OK",
+      style: TextStyle(
+          color: currentTheme.isLightMode ? kSecondaryColor : kMainColor),
+    ),
+    onPressed: () {
+      Navigator.pop(context);
+    },
+  );
+
+  // set up the AlertDialog
+  AlertDialog alert = AlertDialog(
+    backgroundColor: currentTheme.isLightMode ? kMainColor : Colors.grey[900],
+    title: Text(
+      "Please Wait...",
+      style: TextStyle(
+          color: currentTheme.isLightMode ? kSecondaryColor : kMainColor),
+    ),
+    content: Text(
+      "Wallpaper is $screen!!!",
+      style: TextStyle(
+          color: currentTheme.isLightMode ? kSecondaryColor : kMainColor),
+    ),
+    actions: [
+      okButton,
+    ],
+  );
+
+  // show the dialog
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return alert;
+    },
   );
 }

@@ -15,6 +15,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.6.1"
+  async_wallpaper:
+    dependency: "direct main"
+    description:
+      name: async_wallpaper
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.1"
   boolean_selector:
     dependency: transitive
     description:
@@ -289,6 +296,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.0+1"
+  onesignal_flutter:
+    dependency: "direct main"
+    description:
+      name: onesignal_flutter
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "3.3.0"
   path:
     dependency: transitive
     description:
@@ -539,13 +553,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.1.0"
-  wallpaper_manager:
-    dependency: "direct main"
-    description:
-      name: wallpaper_manager
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.0.10"
   win32:
     dependency: transitive
     description:

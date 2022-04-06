@@ -2,9 +2,9 @@ import 'package:url_launcher/url_launcher.dart';
 
 launchURL(String socialMedia) async {
   const facebookURL = 'https://www.facebook.com/profile.php?id=100010760566739';
-  const instagramURL = 'https://www.instagram.com/amaan.0605';
-  const twitterURL = 'https://twitter.com/nawab_amaan1';
-  const youtubeURL = 'https://www.youtube.com/';
+  const instagramURL = 'https://www.instagram.com/the_ethix_inc';
+  const twitterURL = 'https://twitter.com/nawab_amaan1/';
+  const youtubeURL = 'https://www.youtube.com/channel/UCg6DdxKFr7pXeHD-VFMAvuA';
   if (socialMedia == 'instagram') {
     if (await canLaunch(instagramURL)) {
       await launch(instagramURL);

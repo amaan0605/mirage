@@ -3,31 +3,30 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:getwidget/getwidget.dart';
-import 'package:wallpaper_manager/wallpaper_manager.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:wallpaperhub/data/adhelper.dart';
+import 'package:wallpaperhub/ui/views/theme_mode.dart';
 import 'package:wallpaperhub/ui/widgets/widget.dart';
 import 'package:sizer/sizer.dart';
+import 'package:async_wallpaper/async_wallpaper.dart';
 
 //SET AS HOMESCREEN.....
 
-class SetAsWallpaperAsHome extends StatefulWidget {
-  SetAsWallpaperAsHome({this.imgURL});
+class SetAsWallpapers extends StatefulWidget {
+  SetAsWallpapers({this.imgURL});
   final String imgURL;
   @override
-  _SetAsWallpaperAsHomeState createState() => _SetAsWallpaperAsHomeState();
+  _SetAsWallpapersState createState() => _SetAsWallpapersState();
 }
 
-class _SetAsWallpaperAsHomeState extends State<SetAsWallpaperAsHome> {
+class _SetAsWallpapersState extends State<SetAsWallpapers> {
   //For HomeScreen
   Future<void> setWallpaperFromFileAsHome() async {
     String result;
     var file = await DefaultCacheManager().getSingleFile(widget.imgURL);
     try {
-      result = await WallpaperManager.setWallpaperFromFile(
-          file.path, WallpaperManager.HOME_SCREEN);
-      print(result);
-      if (mounted) {
-        GFToast.showToast('Wallpaper Set!!!', context, toastDuration: 3);
-      }
+      result = await AsyncWallpaper.setWallpaperFromFile(
+          file.path, AsyncWallpaper.HOME_SCREEN);
     } on PlatformException {
       result = 'Failed to get wallpaper.';
       GFToast.showToast('Error Occured! Please Try Again...', context,
@@ -41,10 +40,9 @@ class _SetAsWallpaperAsHomeState extends State<SetAsWallpaperAsHome> {
     String result;
     var file = await DefaultCacheManager().getSingleFile(widget.imgURL);
     try {
-      result = await WallpaperManager.setWallpaperFromFile(
-          file.path, WallpaperManager.LOCK_SCREEN);
+      result = await AsyncWallpaper.setWallpaperFromFile(
+          file.path, AsyncWallpaper.LOCK_SCREEN);
       print(result);
-      GFToast.showToast('Wallpaper Set!!!', context, toastDuration: 3);
     } on PlatformException {
       result = 'Failed to get wallpaper.';
       GFToast.showToast('Error Occured! Please Try Again...', context,
@@ -58,16 +56,42 @@ class _SetAsWallpaperAsHomeState extends State<SetAsWallpaperAsHome> {
     String result;
     var file = await DefaultCacheManager().getSingleFile(widget.imgURL);
     try {
-      result = await WallpaperManager.setWallpaperFromFile(
-          file.path, WallpaperManager.BOTH_SCREENS);
-      GFToast.showToast('Wallpaper Set!!!', context, toastDuration: 3);
+      result = await AsyncWallpaper.setWallpaperFromFile(
+          file.path, AsyncWallpaper.BOTH_SCREENS);
+
       print(result);
     } on PlatformException {
-      result = 'Failed to get wallpaper.';
+      result = 'Failed to get wallpaper...';
       GFToast.showToast('Error Occured! Please Try Again...', context,
           toastDuration: 3);
     }
     if (!mounted) return;
+  }
+
+  InterstitialAd _interstitialAd;
+  bool _isAdReady = false;
+  _initAD() {
+    InterstitialAd.load(
+      adUnitId: AdHelper.interstitialAdUnitId,
+      request: AdRequest(),
+      adLoadCallback: InterstitialAdLoadCallback(
+        onAdLoaded: onAdLoaded,
+        onAdFailedToLoad: (err) {
+          print(err);
+        },
+      ),
+    );
+  }
+
+  void onAdLoaded(InterstitialAd ad) {
+    _interstitialAd = ad;
+    _isAdReady = true;
+  }
+
+  @override
+  void initState() {
+    _initAD();
+    super.initState();
   }
 
   @override
@@ -77,7 +101,7 @@ class _SetAsWallpaperAsHomeState extends State<SetAsWallpaperAsHome> {
       enableDrag: true,
       builder: (context) => Container(
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: currentTheme.isLightMode ? Colors.white : Colors.grey[900],
           borderRadius: BorderRadius.only(
             topLeft: Radius.circular(15.0),
             topRight: Radius.circular(15.0),
@@ -95,6 +119,12 @@ class _SetAsWallpaperAsHomeState extends State<SetAsWallpaperAsHome> {
             //HOMETILE
             ListTile(
               onTap: () {
+                GFToast.showToast(
+                    'Please Wait! Wallpaper Will be Set...', context,
+                    toastDuration: 4);
+                if (_isAdReady) {
+                  _interstitialAd.show();
+                }
                 setWallpaperFromFileAsHome();
                 Navigator.pop(context);
               },
@@ -108,6 +138,12 @@ class _SetAsWallpaperAsHomeState extends State<SetAsWallpaperAsHome> {
             //LOCKTILE
             ListTile(
               onTap: () {
+                GFToast.showToast(
+                    'Please Wait! Wallpaper Will be Set...', context,
+                    toastDuration: 4);
+                if (_isAdReady) {
+                  _interstitialAd.show();
+                }
                 setWallpaperFromFileAsLockScreen();
                 Navigator.pop(context);
               },
@@ -121,6 +157,12 @@ class _SetAsWallpaperAsHomeState extends State<SetAsWallpaperAsHome> {
             //BOTHTILE
             ListTile(
               onTap: () {
+                GFToast.showToast(
+                    'Please Wait! Wallpaper Will be Set...', context,
+                    toastDuration: 4);
+                if (_isAdReady) {
+                  _interstitialAd.show();
+                }
                 setWallpaperFromFileAsBoth();
                 Navigator.pop(context);
               },

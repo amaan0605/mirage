@@ -2,14 +2,11 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:getwidget/components/loader/gf_loader.dart';
 import 'package:getwidget/getwidget.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:http/http.dart' as http;
-import 'package:http/http.dart';
-import 'package:wallpaperhub/api/FireBase/fireBaseData.dart';
-import 'package:wallpaperhub/api/Pixels/pixelsData.dart';
 import 'package:wallpaperhub/api/Unsplash/unSplash_data.dart';
-import 'package:wallpaperhub/ui/screens/categories/category_data.dart';
 import 'package:wallpaperhub/api/Pixels/wallpaper_model.dart';
-import 'package:wallpaperhub/ui/widgets/loadMoreButton.dart';
+import 'package:wallpaperhub/data/adhelper.dart';
 import 'package:wallpaperhub/ui/widgets/widget.dart';
 
 class AfterSearchScreen extends StatefulWidget {
@@ -30,7 +27,6 @@ class _AfterSearchScreenState extends State<AfterSearchScreen> {
     String unsplashSearchUrl =
         'https://api.unsplash.com/search/photos?page=1&per_page=30&query=$query&client_id=$apiID';
 
-    wallpaper.clear();
     var response = await http.get(
       Uri.parse(unsplashSearchUrl),
     );
@@ -39,17 +35,26 @@ class _AfterSearchScreenState extends State<AfterSearchScreen> {
     });
   }
 
-  getMoreSearchWallpaper(String query, int page) async {
-    String _unsplashSearchUrl =
-        'https://api.unsplash.com/search/photos?page=$page&per_page=30&query=$query&client_id=$apiID';
+  BannerAd _bannerAd;
+  bool _isBannerAdReady = false;
 
-    wallpaper.clear();
-    var response = await http.get(
-      Uri.parse(_unsplashSearchUrl),
+  //ADMOB ADS
+  _initBannerAd() {
+    _bannerAd = BannerAd(
+      size: AdSize.banner,
+      adUnitId: AdHelper.bannerAdUnitId,
+      listener: BannerAdListener(onAdLoaded: (_) {
+        setState(() {
+          _isBannerAdReady = true;
+        });
+      }, onAdFailedToLoad: (ad, error) {
+        print('Failed to load Banner ad: ${error.message}');
+        _isBannerAdReady = false;
+        ad.dispose();
+      }),
+      request: AdRequest(),
     );
-    setState(() {
-      unsplashMoreSearchData = json.decode(response.body);
-    });
+    _bannerAd.load();
   }
 
   @override
@@ -57,6 +62,7 @@ class _AfterSearchScreenState extends State<AfterSearchScreen> {
     setState(() {
       getSearchWallpaper(widget.searchQuery, page);
       searchController.text = widget.searchQuery;
+      _initBannerAd();
     });
 
     super.initState();
@@ -81,27 +87,18 @@ class _AfterSearchScreenState extends State<AfterSearchScreen> {
                       child: unsplashWallpaperData(unsplashSearchData, 30),
                     ),
                   ),
+                  if (_isBannerAdReady)
+                    Container(
+                      height: _bannerAd.size.height.toDouble(),
+                      width: _bannerAd.size.width.toDouble(),
+                      child: AdWidget(
+                        ad: _bannerAd,
+                      ),
+                    ),
+                  SizedBox(height: 10),
                 ],
               ),
             ),
     );
-  }
-
-  void searchedPexelWallpaper(String query) async {
-    var response = await http.get(
-        Uri.parse(
-            'https://api.pexels.com/v1/search?query=$query&orientation=portrait&page=$page&per_page=10'),
-        headers: {
-          'Authorization': apiKey,
-          'Content-Type': 'application/json',
-          'Charset': 'utf-8'
-        });
-    Map<String, dynamic> jsonData = jsonDecode(response.body);
-    jsonData['photos'].forEach((element) {
-      WallpaperModel wallpaperModal = WallpaperModel();
-      wallpaperModal = WallpaperModel.fromMap(element);
-      wallpaper.add(wallpaperModal);
-    });
-    setState(() {});
   }
 }

@@ -1,9 +1,6 @@
 import 'dart:ui';
-
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
-import 'package:getwidget/components/alert/gf_alert.dart';
-import 'package:getwidget/components/toast/gf_toast.dart';
 import 'package:sizer/sizer.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:wallpaperhub/ui/widgets/widget.dart';

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:wallpaperhub/api/Pixels/wallpaper_model.dart';
 import 'package:wallpaperhub/ui/views/image_view.dart';
+import 'package:wallpaperhub/ui/widgets/widget.dart';
 
 String pexelURL =
     'https://api.pexels.com/v1/search?query=wallpaper&orientation=portrait&per_page=10';
@@ -34,7 +35,7 @@ Widget pexelwallpaperGrid({List<WallpaperModel> wallpaper, context}) {
               borderRadius: BorderRadius.circular(16),
               child: Container(
                 child: CachedNetworkImage(
-                  errorWidget: (context, url, error) => Icon(Icons.error),
+                  errorWidget: (context, url, error) => failedToLoad(),
                   placeholder: (context, url) => Center(
                       child: GFLoader(
                     type: GFLoaderType.circle,

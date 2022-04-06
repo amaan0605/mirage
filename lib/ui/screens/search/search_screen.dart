@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:wallpaperhub/api/Pixels/wallpaper_model.dart';
 import 'package:wallpaperhub/ui/screens/search/after_search.dart';
-import 'package:wallpaperhub/ui/views/theme_mode.dart';
 import 'package:wallpaperhub/ui/widgets/widget.dart';
 import 'package:sizer/sizer.dart';
 

@@ -1,6 +1,9 @@
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:wallpaperhub/data/adhelper.dart';
 import 'package:wallpaperhub/ui/views/theme_mode.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:sizer/sizer.dart';
@@ -14,6 +17,36 @@ class UserScreen extends StatefulWidget {
 
 class _UserScreenState extends State<UserScreen> {
   bool themeSwitch = false;
+  RewardedAd _rewardedAd;
+  bool _isAdReady = false;
+
+  _initRewardAd() {
+    RewardedAd.load(
+      adUnitId: AdHelper.rewardedAdUnitId,
+      request: AdRequest(),
+      rewardedAdLoadCallback: RewardedAdLoadCallback(
+          onAdLoaded: onAdLoaded,
+          onAdFailedToLoad: (err) {
+            print(err);
+          }),
+    );
+  }
+
+  void onAdLoaded(RewardedAd ad) {
+    _rewardedAd = ad;
+    _isAdReady = true;
+    _rewardedAd.fullScreenContentCallback = FullScreenContentCallback(
+      onAdDismissedFullScreenContent: (ad) => _rewardedAd.dispose(),
+      onAdFailedToShowFullScreenContent: (ad, error) => _rewardedAd.dispose(),
+    );
+  }
+
+  @override
+  void initState() {
+    _initRewardAd();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -101,9 +134,7 @@ class _UserScreenState extends State<UserScreen> {
           ),
           GFButton(
             onPressed: () {
-              GFToast.showToast('THANKS FOR TESTING', context,
-                  toastPosition: GFToastPosition.BOTTOM,
-                  backgroundColor: GFColors.FOCUS);
+              launchURL('twitter');
             },
             text: "TWITTER",
             color: Colors.blue,
@@ -116,9 +147,7 @@ class _UserScreenState extends State<UserScreen> {
           ),
           GFButton(
             onPressed: () {
-              GFToast.showToast('THANKS FOR TESTING', context,
-                  toastPosition: GFToastPosition.BOTTOM,
-                  backgroundColor: GFColors.FOCUS);
+              launchURL('youtube');
             },
             text: "YOUTUBE",
             color: Colors.red[600],
@@ -129,8 +158,40 @@ class _UserScreenState extends State<UserScreen> {
             type: GFButtonType.solid,
             blockButton: true,
           ),
+          TextButton(
+            onPressed: () {
+              if (_isAdReady) {
+                _rewardedAd.show(
+                  onUserEarnedReward: GFToast.showToast(
+                      'Thanks for Supporing Us', context,
+                      toastDuration: 3),
+                );
+              }
+            },
+            style: ButtonStyle(
+              fixedSize: MaterialStateProperty.all<Size>(Size(40.5.h, 10)),
+              backgroundColor: MaterialStateProperty.all<Color>(kMainColor),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(left: 25, right: 6),
+                  child: Icon(
+                    Icons.support,
+                    color: Colors.white,
+                  ),
+                ),
+                Text(
+                  'SUPPORT US',
+                  style: TextStyle(color: Colors.white),
+                ),
+              ],
+            ),
+          ),
           SizedBox(
-            height: 3.h,
+            height: 4.h,
           ),
           Text(
             'Made With ❤️',

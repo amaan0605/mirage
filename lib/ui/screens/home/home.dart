@@ -1,4 +1,4 @@
-// import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
@@ -31,13 +31,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   int itemCount = 10;
   DateTime timeBackPress = DateTime.now();
   ScrollController scrollController = ScrollController();
-  // BannerAd _bannerAd;
-  // bool isBannerAdReady = false;
-
-  // //ADMOB
-  // Future<InitializationStatus> initAdmobAds() {
-  //   return MobileAds.instance.initialize();
-  // }
+  BannerAd _bannerAd;
+  bool isBannerAdReady = false;
 
   //API DATA
   pexelWallpapers() async {
@@ -113,29 +108,31 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   //INIT STATE FUNCTION
   @override
   void initState() {
+    _initBannerAd();
     unsplashWallpapers();
     wallHavenWallpaper();
     pexelWallpapers();
-
     super.initState();
   }
 
-  // _initBannerAd(){
-  //   _bannerAd = BannerAd(
-  //       size: AdSize.banner,
-  //       adUnitId: AdHelper.bannerAdUnitId,
-  //       listener: BannerAdListener(onAdLoaded: (_) {
-  //         setState(() {
-  //           isBannerAdReady = true;
-  //         });
-  //       }, onAdFailedToLoad: (ad, error) {
-  //         print('Failed to load Banner ad: ${error.message}');
-  //         isBannerAdReady = false;
-  //         ad.dispose();
-  //       }),
-  //       request: AdRequest());
-  //       _bannerAd.load();
-  // }
+  //ADMOB ADS
+  _initBannerAd() {
+    _bannerAd = BannerAd(
+      size: AdSize.banner,
+      adUnitId: AdHelper.bannerAdUnitId,
+      listener: BannerAdListener(onAdLoaded: (ad) {
+        setState(() {
+          isBannerAdReady = true;
+        });
+      }, onAdFailedToLoad: (ad, error) {
+        print('Failed to load Banner ad: ${error.message}\n\n\n');
+
+        ad.dispose();
+      }),
+      request: AdRequest(),
+    );
+    _bannerAd.load();
+  }
 
   //SCAFFOLD OF APPLICATION
   @override
@@ -147,7 +144,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       floatingActionButton: floatingActionButton(),
 
       //BODY
-      body: unsplashData == null || wallHavenData == null || wallpaper.isEmpty
+      body: unsplashData == null || wallHavenData == null
           ? Center(
               child: GFLoader(
                 type: GFLoaderType.circle,
@@ -173,6 +170,17 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                         ),
 
                         unsplashWallpaperData(unsplashData, 20),
+                        SizedBox(
+                          height: 1.h,
+                        ),
+                        if (isBannerAdReady)
+                          Container(
+                            height: _bannerAd.size.height.toDouble(),
+                            width: _bannerAd.size.width.toDouble(),
+                            child: AdWidget(
+                              ad: _bannerAd,
+                            ),
+                          ),
                         SizedBox(
                           height: 1.h,
                         ),
