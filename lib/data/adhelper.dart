@@ -1,10 +1,10 @@
 class AdHelper {
   static String bannerAdUnitId =
-      'ca-app-pub-5213209276458650/5236028543';
+      "add_your_admob_key";
 
   static String interstitialAdUnitId =
-      "ca-app-pub-5213209276458650/9241812035";
+      "add_your_admob_key";
 
   static String rewardedAdUnitId =
-      "ca-app-pub-5213209276458650/6116105186";
+      "add_your_admob_key";
 }
