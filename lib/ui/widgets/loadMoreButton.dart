@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 
-Widget loadMoreButton({Function onTap}) {
+Widget loadMoreButton({required Function onTap()}) {
   return Padding(
     padding: const EdgeInsets.fromLTRB(16, 10, 16, 16),
     child: GestureDetector(
